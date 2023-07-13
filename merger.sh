@@ -1,7 +1,21 @@
+#!/bin/bash
+
+banner()
+{
+clear
+cat <<'EOF'
+  _                        fossfrog's_
+ /_/_  _ _   _/. _/_  /|,/_  __  _  _
+/ \/_|/ / //_//_\/\  /  //_'//_//_'/ 
+                             _/
+git: shubhamvis98/ramdisk-merger
+
+EOF
+}
 
 gethelp()
 {
-	echo "RAMDISK MERGER"
+	banner
 	echo "USAGE: $(basename $0) [OPTION] [FILE]"
 	echo "	-h|--help #Help"
 	echo "	-t|--twrp #Select TWRP image file"
@@ -13,6 +27,8 @@ msg()
 	echo
 	echo "[+]$@"
 }
+
+banner
 
 if ! command -v "magiskboot" >/dev/null 2>&1
 then
