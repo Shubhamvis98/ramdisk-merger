@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 banner()
 {
 clear
@@ -28,13 +30,22 @@ msg()
 	echo "[+]$@"
 }
 
-banner
+chkarch()
+{
+	arch=$(uname -m)
 
-if ! command -v "magiskboot" >/dev/null 2>&1
-then
-	echo "[!]magiskboot is not in your PATH env"
-	exit 1
-fi
+	if [[ "$arch" == "arm"* ]]; then
+	    MAGISKBOOT=`pwd`/bin/magiskboot_arm
+	elif [[ "$arch" == "x86_64" ]]; then
+	    MAGISKBOOT=`pwd`/bin/magiskboot_x86
+	else
+	    echo "[!]Unknown architecture"
+	    exit
+	fi
+}
+
+banner
+chkarch
 
 OPTARG=$(getopt -o :ha:t: -l help,android:,twrp: -- "$@")
 if [ "$?" != "0" ]; then
@@ -89,11 +100,11 @@ cp $ANDBOOT $ANDTMP
 cp $TWRPBOOT $TWRPTMP
 
 msg "Unpacking $ANDBOOT"
-cd $ANDTMP; magiskboot unpack -h $ANDBOOT
+cd $ANDTMP; $MAGISKBOOT unpack -h $ANDBOOT
 mv ramdisk.cpio $BB/sbin/android.cpio
 
 msg "Unpacking $TWRPBOOT"
-cd $TWRPTMP; magiskboot unpack -h $TWRPBOOT
+cd $TWRPTMP; $MAGISKBOOT unpack -h $TWRPBOOT
 
 ANDVER=`tail -n2 $ANDTMP/header | head -n1 | cut -d '=' -f2`
 ANDLVL=`tail -n1 $ANDTMP/header | cut -d '=' -f2`
@@ -114,7 +125,7 @@ find . | cpio -H newc -o > $BB/sbin/twrp.cpio
 cd $BB; find . | cpio -H newc -o > $ANDTMP/ramdisk.cpio
 
 msg "Repacking merged boot image"
-cd $ANDTMP; magiskboot repack $ANDBOOT
+cd $ANDTMP; $MAGISKBOOT repack $ANDBOOT
 mv new-boot.img $WORKDIR/
 
 msg "Boot image placed here: $WORKDIR/new-boot.img"
