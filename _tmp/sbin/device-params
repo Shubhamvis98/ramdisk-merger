@@ -1,0 +1,6 @@
+#EVENT to capture keyinputs while booting
+#LED for indicator to know when to press the key
+
+EVENT="/dev/input/event3"
+EVENT_NODE="/dev/input/event3 c 13 67"
+LED="/sys/class/leds/white/brightness"
