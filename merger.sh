@@ -19,9 +19,9 @@ gethelp()
 {
 	banner
 	echo "USAGE: $(basename $0) [OPTION] [FILE]"
-	echo "	-h|--help #Help"
-	echo "	-t|--twrp #Select TWRP image file"
-	echo "	-a|--android #Select TWRP image file"
+	echo -e "	-h|--help\t#Help"
+	echo -e "	-a|--android\t#Select Android boot image file"
+	echo -e "	-t|--twrp\t#Select TWRP image file"
 }
 
 msg()
